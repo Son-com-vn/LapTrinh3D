@@ -1,5 +1,5 @@
 // HelloQuad_FAN.js (c) 2012 matsuda
-// Vertex shader progra
+// Vertex shader program
 var VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
   'void main() {\n' +
