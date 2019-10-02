@@ -161,22 +161,22 @@
 
 
         // Near-far
-        // document.getElementById('btnIncreaseNear')
-        //   .addEventListener('click', ()=>{
-        //     increaseNearFunction();
-        //   });
-        // document.getElementById('btnDecreaseNear')
-        // .addEventListener('click', ()=>{
-        //   decreaseNearFunction();
-        // });
-        // document.getElementById('btnIncreaseFar')
-        //   .addEventListener('click', ()=>{
-        //     increaseFarFunction();
-        //   });
-        // document.getElementById('btnDecreaseFar')
-        // .addEventListener('click', ()=>{
-        //   decreaseFarFunction();
-        // });
+        document.getElementById('btnIncreaseNear')
+          .addEventListener('click', ()=>{
+            increaseNearFunction();
+          });
+        document.getElementById('btnDecreaseNear')
+        .addEventListener('click', ()=>{
+          decreaseNearFunction();
+        });
+        document.getElementById('btnIncreaseFar')
+          .addEventListener('click', ()=>{
+            increaseFarFunction();
+          });
+        document.getElementById('btnDecreaseFar')
+        .addEventListener('click', ()=>{
+          decreaseFarFunction();
+        });
         // Light
         var checkLight = document.getElementById('checkLight')
         checkLight.addEventListener('click', (e)=> {
