@@ -392,21 +392,24 @@
   
       function rotate_X_AxisFunction(){
       
-        handleAngle()
+        x_axis==1 ? handleAngle() : ANGLE_STEP =30
         x_axis=1;
         y_axis=0;
         z_axis=0;
       }
       function rotate_Y_AxisFunction(){
-      
-        handleAngle()
+        
+        // handleAngle()
+        y_axis==1 ? handleAngle() : ANGLE_STEP =30
         x_axis=0;
         y_axis=1;
         z_axis=0;
+
+       
       }
       function rotate_Z_AxisFunction(){
        
-        handleAngle()
+        z_axis==1 ? handleAngle() : ANGLE_STEP =30
         x_axis=0;
         y_axis=0;
         z_axis=1;
