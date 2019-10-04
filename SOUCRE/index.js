@@ -49,10 +49,23 @@
       var Tx = 0;
       var Ty = 0;
       var Tz = 0;
-  
+
+      var Sx=1;
+      var Sy=1;
+      var Sz=1;
+
+      var x_axis=1;
+      var y_axis=0;
+      var z_axis=0;
+
       var x = document.getElementById('x');
       var y = document.getElementById('y');
       var z = document.getElementById('z');
+
+      var x_scale = document.getElementById('x_scale');
+      var y_scale = document.getElementById('y_scale');
+      var z_scale = document.getElementById('z_scale');
+     
   
       var textNear = document.getElementById('textNear')
       var textFar = document.getElementById('textFar');
@@ -119,9 +132,20 @@
         var normalMatrix = new Matrix4(); // Transformation matrix for normals
   
         // Rotate
-        var btnRotate = document.getElementById('btnRotate');
-        btnRotate.addEventListener('click', ()=>{
-          rotateFunction();
+        var btnRotateX = document.getElementById('btnRotate-x');
+        btnRotateX.addEventListener('click', ()=>{
+          rotate_X_AxisFunction();
+        });
+
+        var btnRotateY = document.getElementById('btnRotate-y');
+        btnRotateY.addEventListener('click', ()=>{
+          rotate_Y_AxisFunction();
+        });
+
+        var btnRotateZ = document.getElementById('btnRotate-z');
+        btnRotateZ.addEventListener('click', ()=>{
+         
+          rotate_Z_AxisFunction();
         });
   
         // Tanslate
@@ -129,24 +153,30 @@
         btnTranslate.addEventListener('click', ()=>{
           translateFunction();
         });
-  
+        //Scale
+        var btnScale=document.getElementById("btnScale");
+        btnScale.addEventListener('click', ()=>{
+          scaleFunction();
+        });
+
+
         // Near-far
-        // document.getElementById('btnIncreaseNear')
-        //   .addEventListener('click', ()=>{
-        //     increaseNearFunction();
-        //   });
-        // document.getElementById('btnDecreaseNear')
-        // .addEventListener('click', ()=>{
-        //   decreaseNearFunction();
-        // });
-        // document.getElementById('btnIncreaseFar')
-        //   .addEventListener('click', ()=>{
-        //     increaseFarFunction();
-        //   });
-        // document.getElementById('btnDecreaseFar')
-        // .addEventListener('click', ()=>{
-        //   decreaseFarFunction();
-        // });
+        document.getElementById('btnIncreaseNear')
+          .addEventListener('click', ()=>{
+            increaseNearFunction();
+          });
+        document.getElementById('btnDecreaseNear')
+        .addEventListener('click', ()=>{
+          decreaseNearFunction();
+        });
+        document.getElementById('btnIncreaseFar')
+          .addEventListener('click', ()=>{
+            increaseFarFunction();
+          });
+        document.getElementById('btnDecreaseFar')
+        .addEventListener('click', ()=>{
+          decreaseFarFunction();
+        });
         // Light
         var checkLight = document.getElementById('checkLight')
         checkLight.addEventListener('click', (e)=> {
@@ -161,12 +191,15 @@
         });
   
         var tick = function() {
+         
           currentAngle = animate(currentAngle);  // Update the rotation angle
   
           // Calculate the model matrix
           modelMatrix.setOrtho(-1.0, 1.0, -1.0, 1.0, g_near, g_far);
-          modelMatrix.rotate(currentAngle, 0, 1, 0); // Rotate around the y-axis
+          modelMatrix.rotate(currentAngle, x_axis, y_axis, z_axis); // Rotate around the y-axis
           modelMatrix.translate(Tx,Ty,Tz);
+          modelMatrix.scale(Sx,Sy,Sz);
+
           
           // Pass the model matrix to u_ModelMatrix
           gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
@@ -357,14 +390,38 @@
         return newAngle %= 360;
       }
   
-      function rotateFunction(){
+      function rotate_X_AxisFunction(){
+      
+        x_axis==1 ? handleAngle() : ANGLE_STEP =30
+        x_axis=1;
+        y_axis=0;
+        z_axis=0;
+      }
+      function rotate_Y_AxisFunction(){
+        
+        // handleAngle()
+        y_axis==1 ? handleAngle() : ANGLE_STEP =30
+        x_axis=0;
+        y_axis=1;
+        z_axis=0;
+
+       
+      }
+      function rotate_Z_AxisFunction(){
+       
+        z_axis==1 ? handleAngle() : ANGLE_STEP =30
+        x_axis=0;
+        y_axis=0;
+        z_axis=1;
+      }
+      function handleAngle(){
         if(ANGLE_STEP == 30.0){
           ANGLE_STEP = 0.0;
         }else {
           ANGLE_STEP = 30.0;
         }
       }
-  
+      
       function translateFunction() {
         Tx = x.value;
         Ty = y.value;
@@ -382,4 +439,10 @@
       } 
       function decreaseFarFunction() {
         g_far -= 0.1;
+      }
+
+      function scaleFunction(){
+        Sx=x_scale.value.length ==0 ? 1:x_scale.value;
+        Sy=y_scale.value.length ==0 ? 1:y_scale.value;
+        Sz=z_scale.value.length ==0 ? 1:z_scale.value;
       }
