@@ -7,7 +7,7 @@
     <title>3D</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">  
+    <link rel="stylesheet" href="style.css">
     <script src="./lib/cuon-matrix.js"></script>
     <script src="./lib/cuon-utils.js"></script>
     <script src="./lib/webgl-debug.js"></script>
@@ -15,23 +15,22 @@
     <script src="./index.js"></script>
   </head>
   <body onload="main()">  
-    <div style="display: flex">
-      <canvas style="background-image: url(images/background.png); margin-left:30px; margin-top: 20px;" width = "400" height = "400" id = "webgl"></canvas>
-      <div class="input-group m-4">  
-
-        <!-- near - far -->   
+    <div style="display: flex; margin-left: 30px; margin-top: 20px;">
+      <canvas style="background-image: url(images/background.png);"width = "400" height = "400" id = "webgl"></canvas>
+  
+      <div class="input-group m-4">   
+          <!-- near - far -->
         <div style="display: flex" class="mt-3">  
           <h3 class="mr-1">Near</h3>    
-            <button type="button" class="btn btn-success form-control mr-2" id="btnIncreaseNear" >+</button> 
-              <h3 id='textNear' class="mr-2" style="width:60px" >ab</h3>
-            <button type="button" class="btn btn-success form-control mr-3" id="btnDecreaseNear" >-</button> 
+          <button type="button" class="btn btn-success form-control mr-2" id="btnIncreaseNear" >+</button> 
+          <h3 id='textNear' class="mr-2" style="width:60px" >ab</h3>
+          <button type="button" class="btn btn-success form-control mr-3" id="btnDecreaseNear" >-</button> 
   
           <h3 class="mr-1">Far</h3>
-            <button type="button" class="btn btn-success form-control mr-2" id="btnIncreaseFar">+</button>  
-              <h3 id='textFar' class="mr-2" style="width:60px">ab</h3>
-            <button type="button" class="btn btn-success form-control mr-3" id="btnDecreaseFar">-</button>
+          <button type="button" class="btn btn-success form-control mr-2" id="btnIncreaseFar">+</button>  
+          <h3 id='textFar' class="mr-2" style="width:60px">ab</h3>
+          <button type="button" class="btn btn-success form-control mr-3" id="btnDecreaseFar">-</button>
         </div>
-
         <!-- tịnh tiến -->
         <div style="display: flex" class="mt-3">      
           <button type="button" class="btn btn-success form-control mr-3" id="btnTranslate">Translate</button>    
@@ -44,48 +43,53 @@
         </div>
         <!-- co dãn -->
         <div style="display: flex" class="mt-3">      
-          <button type="button" class="btn btn-success form-control mr-3" id="btnScale">Scale</button>             
+          <button type="button" class="btn btn-success form-control mr-3" id="btnScale">Scale</button>    
+          
           <input type="text" placeholder="x" class="form-control mr-3" id="x_scale" >
           <input type="text" placeholder="y" class="form-control mr-3" id="y_scale" >
           <input type="text" placeholder="z" class="form-control mr-3" id="z_scale" >
+   
         </div>
-        
-        <!-- xoay -->
+        <!--  xoay -->
         <div style="display: flex;" class="mt-3">      
-          <button type="button" class="btn btn-success form-control  mr-3" id="btnRotate-x">Rotate X</button>  
-          <button type="button" class="btn btn-success form-control  mr-3" id="btnRotate-y">Rotate Y</button>
-          <button type="button" class="btn btn-success form-control  mr-3" id="btnRotate-z">Rotate Z</button>  
-          <input type="text" placeholder="Angle" class="form-control mr-3" id="gocxoay">      
+          <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-x">Rotate X</button>  
+          <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-y">Rotate Y</button>
+          <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-z">Rotate Z</button>  
+          <input type="text" placeholder="Angle" class="form-control mr-3" id="Angle" >   
         </div>
-  
-        <!-- chieu sang -->
+      <!--  texture -->
         <div class="input-group mt-3 w-50" >
           <div class="input-group-prepend">
             <div class="input-group-text form-control">
-              <input type="checkbox" id="checkLight" aria-label="Checkbox for following text input"/>
-            </div>
-          </div>
-          <input type="text" 
-          class="form-control"
-          aria-label="Text input with checkbox" 
-          value="Tick Up Light" 
-          disabled
-        />
-        <div class="input-group-prepend">
-            <div class="input-group-text form-control">
-              <input type="checkbox" id="checkTexTure" aria-label="Checkbox for following text input">
+              <input type="checkbox" id="checkLight" aria-label="Checkbox for following text input">
             </div>
           </div>
           <input type="text" 
             class="form-control"
             aria-label="Text input with checkbox" 
-            value="Tlick Up TextTure" 
+            value="Tick up Light" 
             disabled
           />
-          <button type="button" class="btn btn-success form-control  mr-3" id="ResetTexTure">Reset</button>
+          <div class="input-group-prepend">
+              <div class="input-group-text form-control">
+                <input type="checkbox" id="checkLight" aria-label="Checkbox for following text input">
+              </div>
+            </div>
+            <input type="text" 
+              class="form-control"
+              aria-label="Text input with checkbox" 
+              value="Tick up TexTure" 
+              disabled
+            />
+            <button type="button" class="btn btn-success form-control mr-3" id="reset">Reset</button>
         </div>
- 
+        
       </div>
     </div>
+    <script src="./lib/cuon-matrix.js"></script>
+    <script src="./lib/cuon-utils.js"></script>
+    <script src="./lib/webgl-debug.js"></script>
+    <script src="./lib/webgl-utils.js"></script>
+    <script src="./index.js"></script>
   </body>
 </html>
