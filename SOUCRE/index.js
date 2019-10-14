@@ -1,5 +1,4 @@
-// PointLightedCube.js (c) 2012 matsuda
-      // Vertex shader program
+
       var VSHADER_SOURCE =
         'attribute vec4 a_Position;\n' +
         'attribute vec4 a_Color;\n' +
@@ -93,7 +92,6 @@
           console.log('Failed to set the vertex information');
           return;
         }
-  
         // Set the clear color and enable the depth test
         gl.clearColor(0.0, 0.0, 0.0, 0.5);
         gl.enable(gl.DEPTH_TEST);
@@ -351,7 +349,7 @@
         // Register the event handler to be called on loading an image
         image.onload = function(){ loadTexture(gl, n, texture, u_Sampler, image); };
         // Tell the browser to load an image
-        image.src = 'images/chelsea1.png';
+        image.src = 'images/chelsea2.png';
   
         return true;
       }
