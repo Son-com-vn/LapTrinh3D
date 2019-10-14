@@ -135,16 +135,16 @@
           rotate_X_AxisFunction();
         });
 
-        var btnRotateY = document.getElementById('btnRotate-y');
-        btnRotateY.addEventListener('click', ()=>{
-          rotate_Y_AxisFunction();
-        });
+        // var btnRotateY = document.getElementById('btnRotate-y');
+        // btnRotateY.addEventListener('click', ()=>{
+        //   rotate_Y_AxisFunction();
+        // });
 
-        var btnRotateZ = document.getElementById('btnRotate-z');
-        btnRotateZ.addEventListener('click', ()=>{
+        // var btnRotateZ = document.getElementById('btnRotate-z');
+        // btnRotateZ.addEventListener('click', ()=>{
          
-          rotate_Z_AxisFunction();
-        });
+        //   rotate_Z_AxisFunction();
+        // });
   
         // Tanslate
         var btnTranslate = document.getElementById('btnTranslate');
@@ -180,7 +180,7 @@
         checkLight.addEventListener('click', (e)=> {
           if(checkLight.checked) {
             gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
-            gl.uniform3f(u_AmbientLight, 0., 0., 0.);
+            gl.uniform3f(u_AmbientLight, 0, 1, 0.);
             
           } else {
             gl.uniform3f(u_LightPosition, 0, 0, 0);
