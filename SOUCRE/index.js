@@ -48,7 +48,7 @@
       var Tx = 0;
       var Ty = 0;
       var Tz = 0;
-
+var tick;
       var Sx=1;
       var Sy=1;
       var Sz=1;
@@ -56,7 +56,8 @@
       var x_axis=1;
       var y_axis=0;
       var z_axis=0;
-
+var gl;
+var canvas;
       var x = document.getElementById('x');
       var y = document.getElementById('y');
       var z = document.getElementById('z');
@@ -71,10 +72,10 @@
   
       function main() {
         // Retrieve <canvas> element
-        var canvas = document.getElementById('webgl');
+        canvas = document.getElementById('webgl');
   
         // Get the rendering context for WebGL
-        var gl = getWebGLContext(canvas);
+         gl = getWebGLContext(canvas);
         if (!gl) {
           console.log('Failed to get the rendering context for WebGL');
           return;
@@ -118,11 +119,11 @@
         vpMatrix.lookAt(6, 6, 14, 0, 0, 0, 0, 1, 0);
   
         // Set the light color (white)
-        gl.uniform3f(u_LightColor, 1.0, 0.0, 0.0);
+        gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
         // Set the light direction (in the world coordinate)
-        // gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
+         gl.uniform3f(u_LightPosition,1.0, 1.0, 1.0);
         // // Set the ambient light
-        // gl.uniform3f(u_AmbientLight, 0.0, 0.0, 0.0);
+        gl.uniform3f(u_AmbientLight, 0.0, 0.0, 0.0);
   
         var currentAngle = 0.0;  // Current rotation angle
         var modelMatrix = new Matrix4();  // Model matrix
@@ -151,6 +152,12 @@
         btnTranslate.addEventListener('click', ()=>{
           translateFunction();
         });
+        var btnReset = document.getElementById('reset');
+        btnReset.addEventListener('click', ()=>{
+          document.getElementById("checkLight").checked = false;
+          gl.uniform3f(u_LightPosition, 0, 0, 0);
+          gl.uniform3f(u_AmbientLight, 0.0, 0.0, 0.0);
+        });
         //Scale
         var btnScale=document.getElementById("btnScale");
         btnScale.addEventListener('click', ()=>{
@@ -175,21 +182,31 @@
         .addEventListener('click', ()=>{
           decreaseFarFunction();
         });
-        // Light
+        // check Light
         var checkLight = document.getElementById('checkLight')
         checkLight.addEventListener('click', (e)=> {
           if(checkLight.checked) {
+            //document.getElementById("checkLight").checked = true;
             gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
-            gl.uniform3f(u_AmbientLight, 0, 1, 0.);
+            gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
             
           } else {
             gl.uniform3f(u_LightPosition, 0, 0, 0);
             gl.uniform3f(u_AmbientLight, 0.0, 0.0, 0.0);
           }     
         });
-  
-        var tick = function() {
-         
+        
+        // check texture
+        var checkTexture = document.getElementById('checkTextTure')
+        checkLight.addEventListener('click', (e)=> {
+          if(checkcheckTexture.checked) {
+
+          } else {
+
+          }     
+        });
+
+         tick = function() {
           currentAngle = animate(currentAngle);  // Update the rotation angle
   
           // Calculate the model matrix

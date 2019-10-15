@@ -34,30 +34,36 @@
         <!-- tịnh tiến -->
         <div style="display: flex" class="mt-3">      
           <button type="button" class="btn btn-success form-control mr-3" id="btnTranslate">Translate</button>    
-          
+          <label class="mr-3" style="padding-top: 5px;">X</label>
           <input type="text" placeholder="x" class="form-control mr-3" id="x" >
-        
+          <label class="mr-3" style="padding-top: 5px;">Y</label>
           <input type="text" placeholder="y" class="form-control mr-3" id="y">
-      
+          <label class="mr-3" style="padding-top: 5px;">Z</label>
           <input type="text" placeholder="z" class="form-control" id="z">    
         </div>
         <!-- co dãn -->
         <div style="display: flex" class="mt-3">      
           <button type="button" class="btn btn-success form-control mr-3" id="btnScale">Scale</button>    
-          
+          <label class="mr-3" style="padding-top: 5px;">X</label>
           <input type="text" placeholder="x" class="form-control mr-3" id="x_scale" >
+          <label class="mr-3" style="padding-top: 5px;">Y</label>
           <input type="text" placeholder="y" class="form-control mr-3" id="y_scale" >
+          <label class="mr-3" style="padding-top: 5px;">Z</label>
           <input type="text" placeholder="z" class="form-control mr-3" id="z_scale" >
    
         </div>
         <!--  xoay -->
         <div style="display: flex;" class="mt-3">      
-          <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-x">Rotate X</button>  
+          <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-x">Rotate</button>  
           <!-- <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-y">Rotate Y</button>
           <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-z">Rotate Z</button>   -->
+          <label class="mr-3" style="padding-top: 5px;">X</label>
           <input type="text" placeholder="x" class="form-control mr-3" id="x_rotate" >
+          <label class="mr-3" style="padding-top: 5px;">Y</label>
           <input type="text" placeholder="y" class="form-control mr-3" id="y_rotate" >
+          <label class="mr-3" style="padding-top: 5px;">Z</label>
           <input type="text" placeholder="z" class="form-control mr-3" id="z_rotate" >
+          <label class="mr-3" style="padding-top: 5px;">Angle</label>
           <input type="text" placeholder="Angle" class="form-control mr-3" id="Angle" >   
         </div>
       <!--  texture -->
@@ -72,10 +78,11 @@
             aria-label="Text input with checkbox" 
             value="Tick up Light" 
             disabled
+            style="margin-right: 10px;"
           />
           <div class="input-group-prepend">
               <div class="input-group-text form-control">
-                <input type="checkbox" id="checkLight" aria-label="Checkbox for following text input">
+                <input type="checkbox" id="checkTexture" aria-label="Checkbox for following text input">
               </div>
             </div>
             <input type="text" 
@@ -83,8 +90,9 @@
               aria-label="Text input with checkbox" 
               value="Tick up TexTure" 
               disabled
+              style="margin-right: 10px;"
             />
-            <button type="button" class="btn btn-success form-control mr-3" id="reset">Reset</button>
+            <button type="button" class="btn btn-success form-control" id ="reset" onclick="reset()">Reset</button>
         </div>
         
       </div>
