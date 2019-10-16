@@ -1,4 +1,4 @@
-// VS
+// // VS
 var VSHADER_SOURCE =
 'attribute vec4 a_Position;\n' +
 'attribute vec4 a_Color;\n' +
@@ -10,7 +10,7 @@ var VSHADER_SOURCE =
 'varying vec4 v_Color;\n' +
 'varying vec3 v_Normal;\n' +
 'varying vec3 v_Position;\n' +
-'varying highp vec2 v_Texture;\n'+
+'varying vec2 v_Texture;\n'+
 'void main() {\n' +
     'gl_Position = u_MvpMatrix * a_Position;\n' +
     'v_Position = vec3(u_ModelMatrix * a_Position);\n' +
@@ -129,15 +129,14 @@ var FSHADER_SOURCE =
 
       gl.uniform1i(u_Type, 1);
       var viewMatrix = new Matrix4();   // View projection matrix
-      projMatrix.setPerspective(30, canvas.width/canvas.height, 1, 25);
       viewMatrix.lookAt(6, 6, 14, 0, 0, 0, 0, 1, 0);
 
       // Set the light color (white)
       gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
-      // Set the light direction (in the world coordinate)
-       gl.uniform3f(u_LightPosition,1.0, 1.0, 1.0);
-      // // Set the ambient light
-      gl.uniform3f(u_AmbientLight, 0.0, 0.0, 0.0);
+
+      // khai báo vị trí nguồn sáng
+      gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
+      gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
 
       var currentAngle = 0.0;  // Current rotation angle
       var modelMatrix = new Matrix4();  // Model matrix
@@ -179,10 +178,6 @@ var FSHADER_SOURCE =
       .addEventListener('click', ()=>{
         decreaseFarFunction();
       });
-
-      // khai báo vị trí nguồn sáng
-      gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
-      gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
 
        tick = function() {
         currentAngle = animate(currentAngle);  // Update the rotation angle
