@@ -6,15 +6,15 @@ var VSHADER_SOURCE =
 'attribute vec2 a_Texture;\n' +
 'uniform mat4 u_MvpMatrix;\n' +
 'uniform mat4 u_ModelMatrix;\n' +
-'uniform mat4 u_NormalMatrix;\n' +
+'uniform mat4 u_NormalMatrix;\n' +  // Coordinate transformation matrix of the normal
 'varying vec4 v_Color;\n' +
 'varying vec3 v_Normal;\n' +
 'varying vec3 v_Position;\n' +
 'varying vec2 v_Texture;\n'+
 'void main() {\n' +
     'gl_Position = u_MvpMatrix * a_Position;\n' +
-    'v_Position = vec3(u_ModelMatrix * a_Position);\n' +
-    'v_Normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
+    'v_Position = vec3(u_ModelMatrix * a_Position);\n' +  // Calculate world coordinate of vertex
+    'v_Normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' + // Recalculate the normal based on the model matrix and make its length 1.
     'v_Color = a_Color;\n' + 
     'v_Texture = a_Texture;\n' + 
 '}\n';
@@ -33,14 +33,14 @@ var FSHADER_SOURCE =
 'uniform int u_Type;\n' +
 'void main() {\n' +
     'vec3 normal = normalize(v_Normal);\n' +
-    'vec3 lightDirection = normalize(u_LightPosition - v_Position);\n' +
-    'float nDotL = max(dot(lightDirection, normal), 0.0);\n' +
+    'vec3 lightDirection = normalize(u_LightPosition - v_Position);\n' +  // Calculate the light direction and make it 1.0 in length
+    'float nDotL = max(dot(lightDirection, normal), 0.0);\n' +      // Calculate the dot product of the normal and light direction
     'vec4 FragColor = v_Color;\n' +
     'if(u_Type == 2)FragColor = texture2D(u_Sampler, v_Texture);\n' +
     'else if(u_Type == 3)FragColor = v_Color + texture2D(u_Sampler, v_Texture);\n' +
-    'vec3 diffuse = u_LightColor * FragColor.rgb * nDotL;\n' +
-    'vec3 ambient = u_AmbientLight * FragColor.rgb;\n' +    
-    'gl_FragColor = vec4(diffuse + ambient, FragColor.a);\n' +
+    'vec3 diffuse = u_LightColor * FragColor.rgb * nDotL;\n' +   // Calculate the color due to diffuse reflection
+    'vec3 ambient = u_AmbientLight * FragColor.rgb;\n' +          // Calculate the color due to ambient reflection
+    'gl_FragColor = vec4(diffuse + ambient, FragColor.a);\n' +    // Add the surface colors due to diffuse reflection and ambient reflection
 '}\n';
 
     var g_near = 5;
@@ -58,8 +58,10 @@ var FSHADER_SOURCE =
     var x_axis=1;
     var y_axis=0;
     var z_axis=0;
+
     var gl;
     var canvas;
+
     var x = document.getElementById('x');
     var y = document.getElementById('y');
     var z = document.getElementById('z');
@@ -359,7 +361,7 @@ var FSHADER_SOURCE =
   
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image); // Thiết lập tham số Format = RBGA cho ảnh png, Type = Byte cho 1 thành phần color
   
-      // Kiểm tra ảnh có phải kiểu Mipmap -> Ngoài giáo trình
+      // Kiểm tra ảnh có phải kiểu Mipmap
       if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
           gl.generateMipmap(gl.TEXTURE_2D);
       } else {
@@ -385,10 +387,12 @@ var FSHADER_SOURCE =
 
     function animate(angle) {
       ANGLE_STEP = isAutoRotate ? inputAngleStep.value :0;
+
       // Calculate the elapsed time
       var now = Date.now();
       var elapsed = now - g_last;
       g_last = now;
+      
       // Update the current rotation angle (adjusted by the elapsed time)
       var newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0;
       return newAngle %= 360;
