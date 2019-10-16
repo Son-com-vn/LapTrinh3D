@@ -1,52 +1,47 @@
+// VS
+var VSHADER_SOURCE =
+'attribute vec4 a_Position;\n' +
+'attribute vec4 a_Color;\n' +
+'attribute vec4 a_Normal;\n' +
+'attribute vec2 a_Texture;\n' +
+'uniform mat4 u_MvpMatrix;\n' +
+'uniform mat4 u_ModelMatrix;\n' +
+'uniform mat4 u_NormalMatrix;\n' +
+'varying vec4 v_Color;\n' +
+'varying vec3 v_Normal;\n' +
+'varying vec3 v_Position;\n' +
+'varying highp vec2 v_Texture;\n'+
+'void main() {\n' +
+    'gl_Position = u_MvpMatrix * a_Position;\n' +
+    'v_Position = vec3(u_ModelMatrix * a_Position);\n' +
+    'v_Normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
+    'v_Color = a_Color;\n' + 
+    'v_Texture = a_Texture;\n' + 
+'}\n';
 
-      var VSHADER_SOURCE =
-      'attribute vec4 a_Position;\n' +
-      'attribute vec4 a_Color;\n' +
-      'attribute vec4 a_Normal;\n' +
-      'uniform mat4 u_MvpMatrix;\n' +
-      'uniform mat4 u_ModelMatrix;\n' +    // Model matrix
-      'uniform mat4 u_NormalMatrix;\n' +   // Coordinate transformation matrix of the normal
-      'uniform vec3 u_LightColor;\n' +     // Light color
-      'uniform vec3 u_LightPosition;\n' +  // Position of the light source
-      'uniform vec3 u_AmbientLight;\n' +   // Ambient light color
-      'attribute vec2 a_TexCoord;\n' +
-      'varying vec2 v_TexCoord;\n' +
-      'varying vec4 v_Color;\n' +
-      'void main() {\n' +
-      '  gl_Position = u_MvpMatrix * a_Position;\n' +
-        // Recalculate the normal based on the model matrix and make its length 1.
-      '  vec3 normal = normalize(vec3(u_NormalMatrix * a_Normal));\n' +
-        // Calculate world coordinate of vertex
-      '  vec4 vertexPosition = u_ModelMatrix * a_Position;\n' +
-        // Calculate the light direction and make it 1.0 in length
-      '  vec3 lightDirection = normalize(u_LightPosition - vec3(vertexPosition));\n' +
-        // Calculate the dot product of the normal and light direction
-      '  float nDotL = max(dot(normal, lightDirection), 0.0);\n' +
-        // Calculate the color due to diffuse reflection
-      '  vec3 diffuse = u_LightColor * a_Color.rgb * nDotL;\n' +
-        // Calculate the color due to ambient reflection
-      '  vec3 ambient = u_AmbientLight * a_Color.rgb;\n' +
-        // Add the surface colors due to diffuse reflection and ambient reflection
-      '  v_Color = vec4(diffuse + ambient, a_Color.a);\n' + 
-      '  v_TexCoord = a_TexCoord;\n' +
-      '}\n';
-
-    // Fragment shader program
-    var FSHADER_SOURCE =
-      '#ifdef GL_ES\n' +
-      'precision mediump float;\n' +
-      '#endif\n' +
-      'uniform sampler2D u_Sampler;\n' +
-      'uniform int u_Type;\n' +
-      'varying vec2 v_TexCoord;\n' +
-      'varying vec4 v_Color;\n' + 
- 
-      'void main() {\n' +
-      'vec4 FragColor=  v_Color;\n' + 
-      ' if(u_Type == 2)FragColor = texture2D(u_Sampler, v_TexCoord);\n' +
-      ' else if(u_Type == 3)FragColor = v_Color + texture2D(u_Sampler, v_TexCoord);\n' +
-      ' gl_FragColor = FragColor ;\n' +
-      '}\n';
+// FS
+var FSHADER_SOURCE = 
+'precision mediump float;\n' +
+'uniform vec3 u_LightColor;\n' +
+'uniform vec3 u_LightPosition;\n' +
+'uniform vec3 u_AmbientLight;\n' +
+'uniform sampler2D u_Sampler;\n' +
+'varying vec3 v_Normal;\n' +
+'varying vec3 v_Position;\n' +
+'varying vec4 v_Color;\n' +
+'varying vec2 v_Texture;\n' +
+'uniform int u_Type;\n' +
+'void main() {\n' +
+    'vec3 normal = normalize(v_Normal);\n' +
+    'vec3 lightDirection = normalize(u_LightPosition - v_Position);\n' +
+    'float nDotL = max(dot(lightDirection, normal), 0.0);\n' +
+    'vec4 FragColor = v_Color;\n' +
+    'if(u_Type == 2)FragColor = texture2D(u_Sampler, v_Texture);\n' +
+    'else if(u_Type == 3)FragColor = v_Color + texture2D(u_Sampler, v_Texture);\n' +
+    'vec3 diffuse = u_LightColor * FragColor.rgb * nDotL;\n' +
+    'vec3 ambient = u_AmbientLight * FragColor.rgb;\n' +    
+    'gl_FragColor = vec4(diffuse + ambient, FragColor.a);\n' +
+'}\n';
 
     var g_near = 5;
     var g_far = 25;
@@ -154,10 +149,6 @@
       btnRotateX.addEventListener('click', ()=>{
         rotate_X_AxisFunction();
       });
-
-      
-
-      // view project
      
       // Tanslate
       var btnTranslate = document.getElementById('btnTranslate');
@@ -170,7 +161,6 @@
       btnScale.addEventListener('click', ()=>{
         scaleFunction();
       });
-
 
       // Near-far
       document.getElementById('btnIncreaseNear')
@@ -189,17 +179,13 @@
       .addEventListener('click', ()=>{
         decreaseFarFunction();
       });
-      // check Light
+
+      // khai báo vị trí nguồn sáng
       gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
       gl.uniform3f(u_AmbientLight, 0.2, 0.2, 0.2);
 
        tick = function() {
         currentAngle = animate(currentAngle);  // Update the rotation angle
-
-        // Calculate the model matrix
-        
-      
-        // projMatrix.setOrtho(-4.0, 4.0, -4.0, 4.0, g_near, g_far)
         typeProjection == "Ortho" 
         ? projMatrix.setOrtho(-4.0, 4.0, -4.0, 4.0, g_near, g_far) 
         : projMatrix.setPerspective(30, canvas.width/canvas.height, g_near, g_far); 
@@ -211,12 +197,14 @@
         x_axis=x_rote.value;
         y_axis=y_rote.value;
         z_axis=z_rote.value;
+
         // Pass the model matrix to u_ModelMatrix
         gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
 
         // Pass the model view projection matrix to u_MvpMatrix
         mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
         
+        // truyền giá trị vào u_MvpMatrix
         gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
 
         // Pass the matrix to transform the normal based on the model matrix to u_NormalMatrix
@@ -265,7 +253,7 @@
         1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v1-v1-v7-v2 left
         1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0,     // v7-v4-v3-v2 down
         1, 0, 0,   1, 0, 0,   1, 0, 0,  1, 0, 0　    // v4-v7-v6-v5 back
-    ]);
+      ]);
 
       // Normal
       var normals = new Float32Array([
@@ -287,7 +275,7 @@
         20,21,22,  20,22,23     // back
       ]);
 
-      var texCoords = new Float32Array([   // Texture coordinates
+      var texTure = new Float32Array([   // Texture coordinates
           1.0, 1.0,   0.0, 1.0,   0.0, 0.0,   1.0, 0.0,    // v0-v1-v2-v3 front
           0.0, 1.0,   0.0, 0.0,   1.0, 0.0,   1.0, 1.0,    // v0-v3-v4-v5 right
           1.0, 0.0,   1.0, 1.0,   0.0, 1.0,   0.0, 0.0,    // v0-v5-v6-v1 up
@@ -300,7 +288,7 @@
       if (!initArrayBuffer(gl, 'a_Position', vertices, 3, gl.FLOAT)) return -1;
       if (!initArrayBuffer(gl, 'a_Color', colors, 3, gl.FLOAT)) return -1;
       if (!initArrayBuffer(gl, 'a_Normal', normals, 3, gl.FLOAT)) return -1;
-      if (!initArrayBuffer(gl, 'a_TexCoord',texCoords, 2, gl.FLOAT )) return -1;// Texture coordinates
+      if (!initArrayBuffer(gl, 'a_Texture',texTure, 2, gl.FLOAT )) return -1;// Texture coordinates
 
       // Unbind the buffer object
       gl.bindBuffer(gl.ARRAY_BUFFER, null);
@@ -340,6 +328,7 @@
       return true;
     }
 
+    // khởi tạo texture
     function initTextures(gl, n) {
       var texture = gl.createTexture();   // Create a texture object
       if (!texture) {
@@ -360,36 +349,43 @@
       }
       // Register the event handler to be called on loading an image
       image.onload = function(){ loadTexture(gl, n, texture, u_Sampler, image); };
-      // Tell the browser to load an image
-      image.src = 'images/chelsea2.png';
 
+      // Tell the browser to load an image
+      image.src = 'images/image.png';
       return true;
     }
 
     function loadTexture(gl, n, texture, u_Sampler, image) {
-      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
-      // Enable texture unit0
-      gl.activeTexture(gl.TEXTURE0);
-      // Bind the texture object to the target
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-
-      // Set the texture parameters
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      // Set the texture image
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, image);
-      
-      // Set the texture unit 0 to the sampler
-      gl.uniform1i(u_Sampler, 0);
-      
-      gl.clear(gl.COLOR_BUFFER_BIT);   // Clear <canvas>
-
-      gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0); // Draw the rectangle
-    }
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);
+      gl.activeTexture(gl.TEXTURE0);// Kích hoạt đơn vị kết cấu 0
+      gl.bindTexture(gl.TEXTURE_2D, texture); // Gắn đối tượng texture với target
+  
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image); // Thiết lập tham số Format = RBGA cho ảnh png, Type = Byte cho 1 thành phần color
+  
+      // Kiểm tra ảnh có phải kiểu Mipmap -> Ngoài giáo trình
+      if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+          gl.generateMipmap(gl.TEXTURE_2D);
+      } else {
+          // Thiết lập tham số
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); // Phủ kín vùng trái phải, wrapping theo cạnh
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); // Phủ kín vùng trên dưới, wrapping theo cạnh
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); // Thu nhỏ kết cấu cho vừa vùng vẽ
+      }
+  
+      gl.uniform1i(u_Sampler, 0); // Truyền đơn vị kết cấu đến FS chỉ định 0
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0);
+  }
+  
+  function isPowerOf2(value) {
+      return (value & (value - 1)) == 0;
+  }
 
     // Rotation angle (degrees/second)
     var ANGLE_STEP ;
     // Last time that this function was called
     var g_last = Date.now();
+
     function animate(angle) {
       ANGLE_STEP = isAutoRotate ? inputAngleStep.value :0;
       // Calculate the elapsed time
@@ -401,21 +397,21 @@
       return newAngle %= 360;
     }
 
+    // auto rotate
     function rotate_X_AxisFunction(){
-  
       isAutoRotate=!isAutoRotate
       y_axis=y_rote.value;
       z_axis=z_rote.value;
     }
-   
-   
     
+    // translate
     function translateFunction() {
       Tx = x.value;
       Ty = y.value;
       Tz = z.value;
     }
     
+    // near - far
     function increaseNearFunction() {
       g_near += 1;
     }
@@ -429,33 +425,19 @@
       g_far -= 1;
     }
 
+    // scaled
     function scaleFunction(){
       Sx=x_scale.value.length ==0 ? 1:x_scale.value;
       Sy=y_scale.value.length ==0 ? 1:y_scale.value;
       Sz=z_scale.value.length ==0 ? 1:z_scale.value;
     }
+
+    // handle check ortho || perspective
     function handleCheck(myRadio){
        typeProjection = myRadio.value;
-      //  if(typeProjection == "Perspective"){
-      //   projMatrix.setPerspective(30, canvas.width/canvas.height, (1), (25)); 
-      //   console.log("alo111")
-      //  }
-       
-      //   else
-      //     projMatrix.setOrtho(-4.0, 4.0, -4.0, 4.0, g_near, g_far) 
-    }
-    function handleCheckLight(e){
-      if(e.checked)
-        gl.uniform1i(u_Type, 1);
-    
-      
-
-    }
-    function handleCheckTexture(e){
-      if(e.checked)
-      gl.uniform1i(u_Type, 2);
     }
 
+    // handle check Light - Texture
     function checkLightTure(e){
       gl.uniform1i(u_Type, e.value);
     }

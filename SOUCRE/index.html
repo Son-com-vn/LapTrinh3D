@@ -12,11 +12,6 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="style.css" />
-    <script src="./lib/cuon-matrix.js"></script>
-    <script src="./lib/cuon-utils.js"></script>
-    <script src="./lib/webgl-debug.js"></script>
-    <script src="./lib/webgl-utils.js"></script>
-    <script src="./index.js"></script>
   </head>
   <body onload="main()">
     <div style="display: flex; margin-left: 30px; margin-top: 20px;">
@@ -72,16 +67,18 @@
                   name="type"
                   onclick="handleCheck(this)"
                   value="Ortho"
-                />Hộp</label
+                />Ortho</label
               >
               <label
                 ><input
+                  style="margin-top: 13px;"
                   type="radio"
                   name="type"
                   onclick="handleCheck(this)"
                   value="Perspective"
                   checked
-                />Chóp</label
+                />
+                Perspective</label
               >
             </form>
           </div>
@@ -140,10 +137,8 @@
             class="btn btn-success form-control mr-3"
             id="btnRotate"
           >
-            Auto Rote
+            Auto Rotate
           </button>
-          <!-- <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-y">Rotate Y</button>
-          <button type="button" class="btn btn-success form-control mr-3" id="btnRotate-z">Rotate Z</button>   -->
           <label class="mr-3" style="padding-top: 5px;">X</label>
           <input
             min="0"
@@ -193,7 +188,7 @@
                     value="1"
                     checked
                   />
-                  <label>Color</label>
+                  <label>Light</label>
                 </div>
                 <div class="col-sm-3">
                   <input
@@ -211,7 +206,7 @@
                     name="type"
                     value="3"
                   />
-                  <label>Texture & Color</label>
+                  <label>Texture & Light</label>
                 </div>
                 <div class="col-sm-7"></div>
 
