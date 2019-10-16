@@ -43,8 +43,8 @@
         '  gl_FragColor = v_Color + texture2D(u_Sampler, v_TexCoord) ;\n' +
         '}\n';
   
-      var g_near = 0.01;
-      var g_far = 2.1;
+      var g_near = 5;
+      var g_far = 25;
       var Tx = 0;
       var Ty = 0;
       var Tz = 0;
@@ -53,6 +53,7 @@
       var gl;
       var canvas;
 
+      var tick;
       var Sx=1;
       var Sy=1;
       var Sz=1;
@@ -74,6 +75,15 @@
       var textNear = document.getElementById('textNear')
       var textFar = document.getElementById('textFar');
   
+      var x_rote=document.getElementById('x_rotate');
+      var y_rote=document.getElementById('y_rotate');
+      var z_rote=document.getElementById('z_rotate');
+
+      var inputAngleStep=document.getElementById('Angle');
+
+      var isAutoRotate = false;
+      var projMatrix = new Matrix4();
+      var typeProjection="Perspective";
       function main() {
         // Retrieve <canvas> element
         canvas = document.getElementById('webgl');
@@ -118,9 +128,10 @@
           return;
         }
   
-        var vpMatrix = new Matrix4();   // View projection matrix
-        vpMatrix.setPerspective(30, canvas.width/canvas.height, 1, 100);
-        vpMatrix.lookAt(6, 6, 14, 0, 0, 0, 0, 1, 0);
+        
+        var viewMatrix = new Matrix4();   // View projection matrix
+        projMatrix.setPerspective(30, canvas.width/canvas.height, 1, 25);
+        viewMatrix.lookAt(6, 6, 14, 0, 0, 0, 0, 1, 0);
   
         // Set the light color (white)
         gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
@@ -135,22 +146,15 @@
         var normalMatrix = new Matrix4(); // Transformation matrix for normals
   
         // Rotate
-        var btnRotateX = document.getElementById('btnRotate-x');
+        var btnRotateX = document.getElementById('btnRotate');
         btnRotateX.addEventListener('click', ()=>{
           rotate_X_AxisFunction();
         });
 
-        // var btnRotateY = document.getElementById('btnRotate-y');
-        // btnRotateY.addEventListener('click', ()=>{
-        //   rotate_Y_AxisFunction();
-        // });
-
-        // var btnRotateZ = document.getElementById('btnRotate-z');
-        // btnRotateZ.addEventListener('click', ()=>{
-         
-        //   rotate_Z_AxisFunction();
-        // });
+        
   
+        // view project
+       
         // Tanslate
         var btnTranslate = document.getElementById('btnTranslate');
         btnTranslate.addEventListener('click', ()=>{
@@ -214,17 +218,25 @@
           currentAngle = animate(currentAngle);  // Update the rotation angle
   
           // Calculate the model matrix
-          modelMatrix.setOrtho(-1.0, 1.0, -1.0, 1.0, g_near, g_far);
-          modelMatrix.rotate(currentAngle, x_axis, y_axis, z_axis); // Rotate around the y-axis
+          
+        
+          // projMatrix.setOrtho(-4.0, 4.0, -4.0, 4.0, g_near, g_far)
+          typeProjection == "Ortho" 
+          ? projMatrix.setOrtho(-4.0, 4.0, -4.0, 4.0, g_near, g_far) 
+          : projMatrix.setPerspective(30, canvas.width/canvas.height, g_near, g_far); 
+
+          modelMatrix.setRotate(currentAngle, x_axis, y_axis, z_axis); // Rotate around the y-axis
           modelMatrix.translate(Tx,Ty,Tz);
           modelMatrix.scale(Sx,Sy,Sz);
 
-          
+          x_axis=x_rote.value;
+          y_axis=y_rote.value;
+          z_axis=z_rote.value;
           // Pass the model matrix to u_ModelMatrix
           gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
   
           // Pass the model view projection matrix to u_MvpMatrix
-          mvpMatrix.set(vpMatrix).multiply(modelMatrix);
+          mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
           
           gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
   
@@ -404,10 +416,11 @@
       // ham xu ly su kien tienh tien , xoay , co dan
 
       // Rotation angle (degrees/second)
-      var ANGLE_STEP = 0.0;
+      var ANGLE_STEP ;
       // Last time that this function was called
       var g_last = Date.now();
       function animate(angle) {
+        ANGLE_STEP = isAutoRotate ? inputAngleStep.value :0;
         // Calculate the elapsed time
         var now = Date.now();
         var elapsed = now - g_last;
@@ -418,36 +431,13 @@
       }
       
       function rotate_X_AxisFunction(){
-      
-        x_axis==1 ? handleAngle() : ANGLE_STEP =30
-        x_axis=1;
-        y_axis=0;
-        z_axis=0;
+    
+        isAutoRotate=!isAutoRotate
+        y_axis=y_rote.value;
+        z_axis=z_rote.value;
       }
-      function rotate_Y_AxisFunction(){
-        
-        // handleAngle()
-        y_axis==1 ? handleAngle() : ANGLE_STEP =30
-        x_axis=0;
-        y_axis=1;
-        z_axis=0;
-
-       
-      }
-      function rotate_Z_AxisFunction(){
-       
-        z_axis==1 ? handleAngle() : ANGLE_STEP =30
-        x_axis=0;
-        y_axis=0;
-        z_axis=1;
-      }
-      function handleAngle(){
-        if(ANGLE_STEP == 30.0){
-          ANGLE_STEP = 0.0;
-        }else {
-          ANGLE_STEP = 30.0;
-        }
-      }
+     
+     
       
       function translateFunction() {
         Tx = x.value;
@@ -456,20 +446,30 @@
       }
       
       function increaseNearFunction() {
-        g_near += 0.02;
+        g_near += 1;
       }
       function decreaseNearFunction() {
-        g_near -= 0.02;
+        g_near -= 1;
       }
       function increaseFarFunction() {
-        g_far += 0.1;
+        g_far += 1;
       } 
       function decreaseFarFunction() {
-        g_far -= 0.1;
+        g_far -= 1;
       }
 
       function scaleFunction(){
         Sx=x_scale.value.length ==0 ? 1:x_scale.value;
         Sy=y_scale.value.length ==0 ? 1:y_scale.value;
         Sz=z_scale.value.length ==0 ? 1:z_scale.value;
+      }
+      function handleCheck(myRadio){
+         typeProjection = myRadio.value;
+        //  if(typeProjection == "Perspective"){
+        //   projMatrix.setPerspective(30, canvas.width/canvas.height, (1), (25)); 
+        //   console.log("alo111")
+        //  }
+         
+        //   else
+        //     projMatrix.setOrtho(-4.0, 4.0, -4.0, 4.0, g_near, g_far) 
       }
