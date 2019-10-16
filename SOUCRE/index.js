@@ -48,7 +48,11 @@
       var Tx = 0;
       var Ty = 0;
       var Tz = 0;
-var tick;
+
+      var tick;
+      var gl;
+      var canvas;
+
       var Sx=1;
       var Sy=1;
       var Sz=1;
@@ -56,8 +60,8 @@ var tick;
       var x_axis=1;
       var y_axis=0;
       var z_axis=0;
-var gl;
-var canvas;
+
+
       var x = document.getElementById('x');
       var y = document.getElementById('y');
       var z = document.getElementById('z');
@@ -308,7 +312,7 @@ var canvas;
         if (!initArrayBuffer(gl, 'a_TexCoord',texCoords, 2, gl.FLOAT )) return -1;// Texture coordinates
   
         // Unbind the buffer object
-        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        //gl.bindBuffer(gl.ARRAY_BUFFER, null);
   
         // Write the indices to the buffer object
         var indexBuffer = gl.createBuffer();
@@ -345,6 +349,10 @@ var canvas;
         return true;
       }
   
+
+
+      // ham xu ly su kien texture
+
       function initTextures(gl, n) {
         var texture = gl.createTexture();   // Create a texture object
         if (!texture) {
@@ -391,6 +399,10 @@ var canvas;
         gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_BYTE, 0); // Draw the rectangle
       }
   
+
+
+      // ham xu ly su kien tienh tien , xoay , co dan
+
       // Rotation angle (degrees/second)
       var ANGLE_STEP = 0.0;
       // Last time that this function was called
@@ -404,7 +416,7 @@ var canvas;
         var newAngle = angle + (ANGLE_STEP * elapsed) / 1000.0;
         return newAngle %= 360;
       }
-  
+      
       function rotate_X_AxisFunction(){
       
         x_axis==1 ? handleAngle() : ANGLE_STEP =30
