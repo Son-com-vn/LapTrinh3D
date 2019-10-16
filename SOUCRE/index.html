@@ -66,8 +66,23 @@
 
           <div class="col-sm-4">
             <form name="FormProj">
-              <label><input type="radio" name="type" onclick="handleCheck(this)" value="Ortho" />Hộp</label>
-              <label><input type="radio" name="type" onclick="handleCheck(this)" value="Perspective" checked />Chóp</label>
+              <label
+                ><input
+                  type="radio"
+                  name="type"
+                  onclick="handleCheck(this)"
+                  value="Ortho"
+                />Hộp</label
+              >
+              <label
+                ><input
+                  type="radio"
+                  name="type"
+                  onclick="handleCheck(this)"
+                  value="Perspective"
+                  checked
+                />Chóp</label
+              >
             </form>
           </div>
         </div>
@@ -157,52 +172,53 @@
             id="z_rotate"
           />
           <label class="mr-3" style="padding-top: 5px;">Angle</label>
-          <input type="number" value="30" class="form-control mr-3" id="Angle" />
+          <input
+            type="number"
+            value="30"
+            class="form-control mr-3"
+            id="Angle"
+          />
         </div>
         <!--  texture -->
         <div class="input-group mt-3 w-50">
-          <div class="input-group-prepend">
-            <div class="input-group-text form-control">
-              <input
-                type="checkbox"
-                id="checkLight"
-                aria-label="Checkbox for following text input"
-              />
-            </div>
-          </div>
-          <input
-            type="text"
-            class="form-control"
-            aria-label="Text input with checkbox"
-            value="Tick up Light"
-            disabled
-            style="margin-right: 10px;"
-          />
-          <div class="input-group-prepend">
-            <div class="input-group-text form-control">
-              <input
-                type="checkbox"
-                id="checkTexture"
-                aria-label="Checkbox for following text input"
-              />
-            </div>
-          </div>
-          <input
-            type="text"
-            class="form-control"
-            aria-label="Text input with checkbox"
-            value="Tick up TexTure"
-            disabled
-            style="margin-right: 10px;"
-          />
-          <button
-            type="button"
-            class="btn btn-success form-control"
-            id="reset"
-            onclick="reset()"
-          >
-            Reset
-          </button>
+          <form name="FormTexture">
+            <fieldset class="scheduler-border">
+              <legend class="scheduler-border">Texture</legend>
+              <div class="form-group row">
+                <div class="col-sm-3">
+                  <input
+                    type="radio"
+                    onclick="checkLightTure(this)"
+                    name="type"
+                    value="1"
+                    checked
+                  />
+                  <label>Color</label>
+                </div>
+                <div class="col-sm-3">
+                  <input
+                    type="radio"
+                    onclick="checkLightTure(this)"
+                    name="type"
+                    value="2"
+                  />
+                  <label>Texture</label>
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    type="radio"
+                    onclick="checkLightTure(this)"
+                    name="type"
+                    value="3"
+                  />
+                  <label>Texture & Color</label>
+                </div>
+                <div class="col-sm-7"></div>
+
+                <div class="col-sm-1"></div>
+              </div>
+            </fieldset>
+          </form>
         </div>
       </div>
     </div>
