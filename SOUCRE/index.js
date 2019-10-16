@@ -190,13 +190,15 @@ var FSHADER_SOURCE =
         ? projMatrix.setOrtho(-4.0, 4.0, -4.0, 4.0, g_near, g_far) 
         : projMatrix.setPerspective(30, canvas.width/canvas.height, g_near, g_far); 
 
+        x_axis=x_rote.value;
+        y_axis=y_rote.value;
+        z_axis=z_rote.value;
+
         modelMatrix.setRotate(currentAngle, x_axis, y_axis, z_axis); // Rotate around the y-axis
         modelMatrix.translate(Tx,Ty,Tz);
         modelMatrix.scale(Sx,Sy,Sz);
 
-        x_axis=x_rote.value;
-        y_axis=y_rote.value;
-        z_axis=z_rote.value;
+       
 
         // Pass the model matrix to u_ModelMatrix
         gl.uniformMatrix4fv(u_ModelMatrix, false, modelMatrix.elements);
@@ -400,8 +402,6 @@ var FSHADER_SOURCE =
     // auto rotate
     function rotate_X_AxisFunction(){
       isAutoRotate=!isAutoRotate
-      y_axis=y_rote.value;
-      z_axis=z_rote.value;
     }
     
     // translate
